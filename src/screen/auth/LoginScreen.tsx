@@ -1,6 +1,6 @@
-import {Lock, Sms} from 'iconsax-react-native';
-import React, {useEffect, useState} from 'react';
-import {Alert, Image, Switch} from 'react-native';
+import { Lock, Sms } from 'iconsax-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, Switch } from 'react-native';
 import authenticationAPI from '../../apis/authApi';
 import {
   ButtonComponent,
@@ -11,14 +11,15 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-// import SocialLogin from './components/SocialLogin';
+import SocialLogin from './components/SocialLogin';
 // import {useDispatch} from 'react-redux';
 // import {addAuth} from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { appColors } from '../../constants/appColor';
 import { Validate } from '../../utils/validate';
 
-const LoginScreen = ({navigation}: any) => {
+
+const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
@@ -98,7 +99,7 @@ const LoginScreen = ({navigation}: any) => {
         <RowComponent justify="space-between">
           <RowComponent onPress={() => setIsRemember(!isRemember)}>
             <Switch
-              trackColor={{true: appColors.primary}}
+              trackColor={{ true: appColors.primary }}
               thumbColor={appColors.white}
               value={isRemember}
               onChange={() => setIsRemember(!isRemember)}
@@ -122,7 +123,7 @@ const LoginScreen = ({navigation}: any) => {
           type="primary"
         />
       </SectionComponent>
-      {/* <SocialLogin /> */}
+      <SocialLogin />
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Don’t have an account? " />

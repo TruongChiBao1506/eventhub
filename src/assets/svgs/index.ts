@@ -1,5 +1,6 @@
-// import FaceBook from './Facebook.svg';
-// import Google from './Google.svg';
-// import ChefFork from './ChefFork.svg';
+import Facebook from './Facebook.svg';
+import Google from './Google.svg';
+import ChefFork from './ChefFork.svg';
 
-// export {FaceBook, Google, ChefFork};
+
+export {Facebook, Google, ChefFork};
