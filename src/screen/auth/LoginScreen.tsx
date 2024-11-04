@@ -12,8 +12,8 @@ import {
   TextComponent,
 } from '../../components';
 import SocialLogin from './components/SocialLogin';
-// import {useDispatch} from 'react-redux';
-// import {addAuth} from '../../redux/reducers/authReducer';
+import { useDispatch } from 'react-redux';
+import { addAuth } from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { appColors } from '../../constants/appColor';
 import { Validate } from '../../utils/validate';
@@ -25,7 +25,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [isRemember, setIsRemember] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   // useEffect(() => {
   //   const emailValidation = Validate.email(email);
@@ -38,36 +38,27 @@ const LoginScreen = ({ navigation }: any) => {
   // }, [email, password]);
 
   const handleLogin = async () => {
-  //   const emailValidation = Validate.email(email);
-  //   if (emailValidation) {
-  //     try {
-  //       const res = await authenticationAPI.HandleAuthentication(
-  //         '/login',
-  //         {email, password},
-  //         'post',
-  //       );
+    const emailValidation = Validate.email(email);
+    if (emailValidation) {
+      try {
+        const res = await authenticationAPI.HandleAuthentication(
+          '/login',
+          { email, password },
+          'post',
+        );
 
-  //       dispatch(addAuth(res.data));
+        dispatch(addAuth(res.data));
 
-  //       await AsyncStorage.setItem(
-  //         'auth',
-  //         isRemember ? JSON.stringify(res.data) : email,
-  //       );
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     Alert.alert('Email is not correct!!!!');
-  //   }
-    try {
-      const res = await authenticationAPI.HandleAuthentication('/hello');
-      console.log(res);
-      
-    } catch (error) {
-      console.log(error);
-      
+        await AsyncStorage.setItem(
+          'auth',
+          isRemember ? JSON.stringify(res.data) : email,
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      Alert.alert('Email is not correct!!!!');
     }
-
   };
 
   return (
