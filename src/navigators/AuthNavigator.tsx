@@ -5,6 +5,8 @@ import { LoginScreen } from '../screen';
 import OnboadingScreen from '../screen/auth/OnboadingScreen';
 import SignUpScreen from '../screen/auth/SignUpScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Verification from '../screen/auth/Verification';
+import ForgotPassword from '../screen/auth/ForgotPassword';
 
 const AuthNavigator = () => {
 
@@ -26,6 +28,8 @@ const AuthNavigator = () => {
     {!isExistingUser && <Stack.Screen name="OnboadingScreen" component={OnboadingScreen} />}
     <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+    <Stack.Screen name="Verification" component={Verification} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
   </Stack.Navigator>
 }
 

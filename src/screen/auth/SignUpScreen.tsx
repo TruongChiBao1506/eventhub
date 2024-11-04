@@ -41,22 +41,22 @@ const SignUpScreen = ({ navigation }: any) => {
 
   const dispatch = useDispatch();
 
-  //   useEffect(() => {
-  //     if (
-  //       !errorMessage ||
-  //       (errorMessage &&
-  //         (errorMessage.email ||
-  //           errorMessage.password ||
-  //           errorMessage.confirmPassword)) ||
-  //       !values.email ||
-  //       !values.password ||
-  //       !values.confirmPassword
-  //     ) {
-  //       setIsDisable(true);
-  //     } else {
-  //       setIsDisable(false);
-  //     }
-  //   }, [errorMessage, values]);
+    useEffect(() => {
+      if (
+        !errorMessage ||
+        (errorMessage &&
+          (errorMessage.email ||
+            errorMessage.password ||
+            errorMessage.confirmPassword)) ||
+        !values.email ||
+        !values.password ||
+        !values.confirmPassword
+      ) {
+        setIsDisable(true);
+      } else {
+        setIsDisable(false);
+      }
+    }, [errorMessage, values]);
 
   const handleChangeValue = (key: string, value: string) => {
     const data: any = { ...values };
@@ -104,50 +104,49 @@ const SignUpScreen = ({ navigation }: any) => {
   };
 
   const handleRegister = async () => {
-    //     const api = `/verification`;
-    //     setIsLoading(true);
-    //     try {
-    //       const res = await authenticationAPI.HandleAuthentication(
-    //         api,
-    //         {email: values.email},
-    //         'post',
-    //       );
-
-    //       setIsLoading(false);
-
-    //       navigation.navigate('Verification', {
-    //         code: res.data.code,
-    //         ...values,
-    //       });
-    //     } catch (error) {
-    //       console.log(error);
-    //       setIsLoading(false);
-    //     }
-
-    const { email, password, confirmPassword } = values;
-    const emailValidation = Validate.email(email);
-    const passwordValidation = Validate.Password(password);
-
-    if (email && password && confirmPassword) {
-      if (emailValidation && passwordValidation) {
-        setErrorMessage('');
+        const api = `/verification`;
         setIsLoading(true);
         try {
-          const res = await authenticationAPI.HandleAuthentication('/register', {fullname:values.username, email, password}, 'post');
-          dispatch(addAuth(res.data));
-          await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+          const res = await authenticationAPI.HandleAuthentication(
+            api,
+            {email: values.email},
+            'post',
+          );
+          
           setIsLoading(false);
+          navigation.navigate('Verification', {
+            code: res.data.code,
+            ...values,
+          });
         } catch (error) {
           console.log(error);
           setIsLoading(false);
         }
-      } else {
-        setErrorMessage('Email không hợp lệ');
-      }
 
-    } else {
-      setErrorMessage('Vui lòng nhập đầy đủ thông tin')
-    }
+    // const { email, password, confirmPassword } = values;
+    // const emailValidation = Validate.email(email);
+    // const passwordValidation = Validate.Password(password);
+
+    // if (email && password && confirmPassword) {
+    //   if (emailValidation && passwordValidation) {
+    //     setErrorMessage('');
+    //     setIsLoading(true);
+    //     try {
+    //       const res = await authenticationAPI.HandleAuthentication('/register', {fullname:values.username, email, password}, 'post');
+    //       dispatch(addAuth(res.data));
+    //       await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+    //       setIsLoading(false);
+    //     } catch (error) {
+    //       console.log(error);
+    //       setIsLoading(false);
+    //     }
+    //   } else {
+    //     setErrorMessage('Email không hợp lệ');
+    //   }
+
+    // } else {
+    //   setErrorMessage('Vui lòng nhập đầy đủ thông tin')
+    // }
 
 
 
@@ -213,7 +212,7 @@ const SignUpScreen = ({ navigation }: any) => {
           <ButtonComponent
             onPress={handleRegister}
             text="SIGN UP"
-            // disable={isDisable}
+            disable={isDisable}
             type="primary"
           />
         </SectionComponent>
