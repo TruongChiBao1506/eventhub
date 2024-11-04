@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }: any) => {
   //   }
   // }, [email, password]);
 
-  // const handleLogin = async () => {
+  const handleLogin = async () => {
   //   const emailValidation = Validate.email(email);
   //   if (emailValidation) {
   //     try {
@@ -59,7 +59,16 @@ const LoginScreen = ({ navigation }: any) => {
   //   } else {
   //     Alert.alert('Email is not correct!!!!');
   //   }
-  // };
+    try {
+      const res = await authenticationAPI.HandleAuthentication('/hello');
+      console.log(res);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+  };
 
   return (
     <ContainerComponent isImageBackground isScroll>
@@ -118,7 +127,7 @@ const LoginScreen = ({ navigation }: any) => {
       <SectionComponent>
         <ButtonComponent
           // disable={isDisable}
-          // onPress={handleLogin}
+          onPress={handleLogin}
           text="SIGN IN"
           type="primary"
         />

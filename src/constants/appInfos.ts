@@ -5,5 +5,6 @@ export const appInfo = {
     WIDTH: Dimensions.get('window').width,
     HEIGHT: Dimensions.get('window').height,
   },
-  BASE_URL: 'https://eventhub-sever.onrender.com',
+  // BASE_URL: 'https://eventhub-sever.onrender.com',
+  BASE_URL: 'http://192.168.2.248:3001',
 };

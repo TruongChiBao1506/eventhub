@@ -1,7 +1,6 @@
 
-import {Lock, Sms, User} from 'iconsax-react-native';
-import React, {useEffect, useState} from 'react';
-// import {useDispatch} from 'react-redux';
+import { Lock, Sms, User } from 'iconsax-react-native';
+import React, { useEffect, useState } from 'react';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -12,11 +11,14 @@ import {
   TextComponent,
 } from '../../components';
 
-import {LoadingModal} from '../../modals';
-import {Validate} from '../../utils/validate';
+import { LoadingModal } from '../../modals';
+import { Validate } from '../../utils/validate';
 import SocialLogin from './components/SocialLogin';
 import authenticationAPI from '../../apis/authApi';
 import { appColors } from '../../constants/appColor';
+import { useDispatch } from 'react-redux';
+import { addAuth } from '../../redux/reducers/authReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ErrorMessages {
   email: string;
@@ -31,33 +33,33 @@ const initValue = {
   confirmPassword: '',
 };
 
-const SignUpScreen = ({navigation}: any) => {
+const SignUpScreen = ({ navigation }: any) => {
   const [values, setValues] = useState(initValue);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<any>();
   const [isDisable, setIsDisable] = useState(true);
 
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-//   useEffect(() => {
-//     if (
-//       !errorMessage ||
-//       (errorMessage &&
-//         (errorMessage.email ||
-//           errorMessage.password ||
-//           errorMessage.confirmPassword)) ||
-//       !values.email ||
-//       !values.password ||
-//       !values.confirmPassword
-//     ) {
-//       setIsDisable(true);
-//     } else {
-//       setIsDisable(false);
-//     }
-//   }, [errorMessage, values]);
+  //   useEffect(() => {
+  //     if (
+  //       !errorMessage ||
+  //       (errorMessage &&
+  //         (errorMessage.email ||
+  //           errorMessage.password ||
+  //           errorMessage.confirmPassword)) ||
+  //       !values.email ||
+  //       !values.password ||
+  //       !values.confirmPassword
+  //     ) {
+  //       setIsDisable(true);
+  //     } else {
+  //       setIsDisable(false);
+  //     }
+  //   }, [errorMessage, values]);
 
   const handleChangeValue = (key: string, value: string) => {
-    const data: any = {...values};
+    const data: any = { ...values };
 
     data[`${key}`] = value;
 
@@ -65,7 +67,7 @@ const SignUpScreen = ({navigation}: any) => {
   };
 
   const formValidator = (key: string) => {
-    const data = {...errorMessage};
+    const data = { ...errorMessage };
     let message = ``;
 
     switch (key) {
@@ -101,27 +103,55 @@ const SignUpScreen = ({navigation}: any) => {
     setErrorMessage(data);
   };
 
-//   const handleRegister = async () => {
-//     const api = `/verification`;
-//     setIsLoading(true);
-//     try {
-//       const res = await authenticationAPI.HandleAuthentication(
-//         api,
-//         {email: values.email},
-//         'post',
-//       );
+  const handleRegister = async () => {
+    //     const api = `/verification`;
+    //     setIsLoading(true);
+    //     try {
+    //       const res = await authenticationAPI.HandleAuthentication(
+    //         api,
+    //         {email: values.email},
+    //         'post',
+    //       );
 
-//       setIsLoading(false);
+    //       setIsLoading(false);
 
-//       navigation.navigate('Verification', {
-//         code: res.data.code,
-//         ...values,
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       setIsLoading(false);
-//     }
-//   };
+    //       navigation.navigate('Verification', {
+    //         code: res.data.code,
+    //         ...values,
+    //       });
+    //     } catch (error) {
+    //       console.log(error);
+    //       setIsLoading(false);
+    //     }
+
+    const { email, password, confirmPassword } = values;
+    const emailValidation = Validate.email(email);
+    const passwordValidation = Validate.Password(password);
+
+    if (email && password && confirmPassword) {
+      if (emailValidation && passwordValidation) {
+        setErrorMessage('');
+        setIsLoading(true);
+        try {
+          const res = await authenticationAPI.HandleAuthentication('/register', {fullname:values.username, email, password}, 'post');
+          dispatch(addAuth(res.data));
+          await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
+      } else {
+        setErrorMessage('Email không hợp lệ');
+      }
+
+    } else {
+      setErrorMessage('Vui lòng nhập đầy đủ thông tin')
+    }
+
+
+
+  };
 
   return (
     <>
@@ -181,7 +211,7 @@ const SignUpScreen = ({navigation}: any) => {
         <SpaceComponent height={16} />
         <SectionComponent>
           <ButtonComponent
-            // onPress={handleRegister}
+            onPress={handleRegister}
             text="SIGN UP"
             // disable={isDisable}
             type="primary"
