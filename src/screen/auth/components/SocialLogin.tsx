@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import React, {useState} from 'react';
-import {LoginManager, Profile, Settings} from 'react-native-fbsdk-next';
+import {LoginManager, Profile, Settings, LoginButton} from 'react-native-fbsdk-next';
 // import {useDispatch} from 'react-redux';
 import authenticationAPI from '../../../apis/authApi';
 import {
@@ -15,7 +15,7 @@ import {fontFamilies} from '../../../constants/fontFamilies';
 import { LoadingModal } from '../../../modals';
 import { appColors } from '../../../constants/appColor';
 import { Google, Facebook } from '../../../assets/svgs';
-// import {addAuth} from '../../../redux/reducers/authReducer';
+import {addAuth} from '../../../redux/reducers/authReducer';
 
 // GoogleSignin.configure({
 //   webClientId:
@@ -23,7 +23,7 @@ import { Google, Facebook } from '../../../assets/svgs';
 //   iosClientId:
 //     '51183564123-ftijaqo23c9thm2kfe9ssgqq6p92ru72.apps.googleusercontent.com',
 // });
-// Settings.setAppID('684546690239906');
+Settings.setAppID('1584932592111723');
 
 const SocialLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +114,15 @@ const SocialLogin = () => {
         iconFlex="left"
         icon={<Google />}
       />
-
+      <LoginButton onLoginFinished={(error, result) => {
+        if (error) {
+          console.log(error);
+        } else if (result.isCancelled) {
+          console.log("Login cancelled");
+        } else {
+          console.log(result);
+        }
+      }} />
       <ButtonComponent
         type="primary"
         color={appColors.white}

@@ -27,15 +27,15 @@ const LoginScreen = ({ navigation }: any) => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const emailValidation = Validate.email(email);
+  useEffect(() => {
+    const emailValidation = Validate.email(email);
 
-  //   if (!email || !password || !emailValidation) {
-  //     setIsDisable(true);
-  //   } else {
-  //     setIsDisable(false);
-  //   }
-  // }, [email, password]);
+    if (!email || !password || !emailValidation) {
+      setIsDisable(true);
+    } else {
+      setIsDisable(false);
+    }
+  }, [email, password]);
 
   const handleLogin = async () => {
     const emailValidation = Validate.email(email);
@@ -117,7 +117,7 @@ const LoginScreen = ({ navigation }: any) => {
       <SpaceComponent height={16} />
       <SectionComponent>
         <ButtonComponent
-          // disable={isDisable}
+          disable={isDisable}
           onPress={handleLogin}
           text="SIGN IN"
           type="primary"

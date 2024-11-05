@@ -8,6 +8,7 @@ import AddNewScreen from "./AddNewScreen";
 import ProfileScreen from "./profiles/ProfileScreen";
 import MapScreen from "./maps/MapScreen";
 import EventsScreen from "./events/EventsScreen";
+import SearchEvents from "./events/SearchEvents";
 
 
-export {HomeScreen, LoginScreen, SplashScreen, Verification, ForgotPassword, SignUpScreen, AddNewScreen, ProfileScreen, MapScreen, EventsScreen};
+export {HomeScreen, LoginScreen, SplashScreen, Verification, ForgotPassword, SignUpScreen, AddNewScreen, ProfileScreen, MapScreen, EventsScreen, SearchEvents};
