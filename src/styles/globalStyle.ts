@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { appColors } from '../constants/appColor';
 import { fontFamilies } from '../constants/fontFamilies';
@@ -69,4 +69,14 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: appColors.white,
     margin: 12,
   },
+  noSpaceCard: {
+    alignItems: 'center',
+    margin: 0,
+    padding: 0,
+    marginVertical: 0,
+    marginHorizontal: 0,
+    width: 45,
+    height: 45,
+    justifyContent: 'center'
+  }
 });

@@ -1,107 +1,289 @@
-import { View, Text, Button, StatusBar, SafeAreaView, TouchableOpacity, Platform } from 'react-native'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { View, Text, Button, StatusBar, SafeAreaView, TouchableOpacity, Platform } from 'react-native'
+// import React from 'react'
+// import { useDispatch, useSelector } from 'react-redux';
+// import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { globalStyles } from '../../styles/globalStyle';
+// import { appColors } from '../../constants/appColor';
+// import { CategoriesList, CircleComponent, RowComponent, SpaceComponent, TagComponent, TextComponent } from '../../components';
+// import { ArrowDown, HambergerMenu, Notification, SearchNormal1, Sort } from 'iconsax-react-native';
+// import { fontFamilies } from '../../constants/fontFamilies';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+
+// const HomeScreen = ({ navigation }: any) => {
+//   const dispatch = useDispatch();
+
+//   const auth = useSelector(authSelector);
+
+//   return (
+//     <View style={[globalStyles.container]}>
+//       <StatusBar barStyle={'light-content'} />
+//       <View style={{
+//         backgroundColor: appColors.primary,
+//         height: 179,
+//         borderBottomLeftRadius: 40,
+//         borderBottomRightRadius: 40,
+//         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
+//         paddingHorizontal: 16,
+//       }}>
+//         <RowComponent>
+//           <TouchableOpacity onPress={() => navigation.openDrawer()}>
+//             <HambergerMenu size={24} color={appColors.white} />
+//           </TouchableOpacity>
+//           <View style={{ flex: 1, alignItems: 'center' }}>
+//             <RowComponent>
+//               <TextComponent text='Current location' color={appColors.white2} />
+//               <MaterialIcons name="arrow-drop-down" size={18} color={appColors.white} />
+//             </RowComponent>
+//             <TextComponent text='New York, USA' flex={0} color={appColors.white} font={fontFamilies.medium} />
+//           </View>
+//           <CircleComponent color='#524CE0' size={36}>
+//             <View>
+//               <Notification size={18} color={appColors.white} />
+//               <View style={{
+//                 backgroundColor: '#02E9FE',
+//                 width: 10, height: 10,
+//                 borderRadius: 4,
+//                 borderWidth: 2,
+//                 position: 'absolute',
+//                 borderColor: '#524CE0',
+//                 top: -2,
+//                 right: -2
+//               }}>
+
+//               </View>
+//             </View>
+
+//           </CircleComponent>
+//         </RowComponent>
+//         <SpaceComponent height={20} />
+//         <RowComponent>
+//           <RowComponent styles={{ flex: 1 }} onPress={() => navigation.navigate('SearchEvents', {
+//             isFilter: false,
+//           })
+//           }>
+//             <SearchNormal1 variant='TwoTone' size={20} color={appColors.white} />
+//             <View style={{
+//               width: 1,
+//               backgroundColor: appColors.gray2,
+//               marginHorizontal: 10,
+//               height: 20
+//             }} />
+//             <TextComponent flex={1} text='Search...' color={appColors.gray2} size={16} />
+//           </RowComponent>
+//           <TagComponent
+//             bgColor='#5D56F3'
+
+//             onPress={() => navigation.navigate('SearchEvents', {
+//               isFilter: true,
+//             })
+//             }
+//             label='Filters'
+//             icon={
+//               <CircleComponent size={20} color='#B1AEFA'>
+//                 <Sort size={16} color='#5D56F3' />
+//               </CircleComponent>
+//             } />
+
+//         </RowComponent>
+//         <SpaceComponent height={20} />
+//         <View style={{ bottom: -20, position: 'absolute' }}>
+//           <CategoriesList isColor />
+//         </View>
+
+//       </View>
+
+//       <View style={{
+//         flex: 1,
+//       }}>
+
+//       </View>
+//     </View>
+//     // <View style = {{flex: 1, justifyContent:'center', alignItems:'center'}}>
+//     //   <Text>Home Screen</Text>
+//     //   <Button
+//     //     title="LogOut"
+//     //     onPress={() => dispatch(removeAuth({}))}
+//     //   />
+//     // </View>
+//   )
+// }
+
+// export default HomeScreen
+import {
+  HambergerMenu,
+  Notification,
+  SearchNormal1,
+  Sort,
+} from 'iconsax-react-native';
+import React from 'react';
+import {
+  FlatList,
+  Platform,
+  ScrollView,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  CategoriesList,
+  CircleComponent,
+  EventItem,
+  RowComponent,
+  SectionComponent,
+  SpaceComponent,
+  TagBarComponent,
+  TextComponent,
+} from '../../components';
+import {fontFamilies} from '../../constants/fontFamilies';
+import {authSelector} from '../../redux/reducers/authReducer';
 import { globalStyles } from '../../styles/globalStyle';
 import { appColors } from '../../constants/appColor';
-import { CircleComponent, RowComponent, SpaceComponent, TagComponent, TextComponent } from '../../components';
-import { ArrowDown, HambergerMenu, Notification, SearchNormal1, Sort } from 'iconsax-react-native';
-import { fontFamilies } from '../../constants/fontFamilies';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-
-const HomeScreen = ({ navigation }: any) => {
+const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
 
   const auth = useSelector(authSelector);
+  const itemEvent = {
+    title:'International Band Music Concert',
+    description:'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.',
+    location:{
+      title:'Gala Convention Center',
+      address:'36 Guild Street London, UK '
+    },
+    imageUrl:'',
+    user:[''],
+    authorId:'',
+    startAt: Date.now(),
+    endAt: Date.now(),
 
+  }
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
-      <View style={{
-        backgroundColor: appColors.primary,
-        height: 179,
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40,
-        padding: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
-        paddingHorizontal: 16,
-      }}>
-        <RowComponent>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <HambergerMenu size={24} color={appColors.white} />
-          </TouchableOpacity>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <RowComponent>
-              <TextComponent text='Current location' color={appColors.white2} />
-              <MaterialIcons name="arrow-drop-down" size={18} color={appColors.white} />
-            </RowComponent>
-            <TextComponent text='New York, USA' flex={0} color={appColors.white} font={fontFamilies.medium} />
-          </View>
-          <CircleComponent color='#524CE0' size={36}>
-            <View>
-              <Notification size={18} color={appColors.white} />
-              <View style={{
-                backgroundColor: '#02E9FE',
-                width: 10, height: 10,
-                borderRadius: 4,
-                borderWidth: 2,
-                position: 'absolute',
-                borderColor: '#524CE0',
-                top: -2,
-                right: -2
-              }}>
 
-              </View>
+      <View
+        style={{
+          backgroundColor: appColors.primary,
+          height: 178 + (Platform.OS === 'ios' ? 16 : 0),
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
+        }}>
+        <View style={{paddingHorizontal: 16}}>
+          <RowComponent>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <HambergerMenu size={24} color={appColors.white} />
+            </TouchableOpacity>
+            <View style={[{flex: 1, alignItems: 'center'}]}>
+              <RowComponent>
+                <TextComponent
+                  text="Current Location"
+                  color={appColors.white2}
+                  size={12}
+                />
+                <MaterialIcons
+                  name="arrow-drop-down"
+                  size={18}
+                  color={appColors.white}
+                />
+              </RowComponent>
+              <TextComponent
+                text="New York, USA"
+                flex={0}
+                color={appColors.white}
+                font={fontFamilies.medium}
+                size={13}
+              />
             </View>
 
-          </CircleComponent>
-        </RowComponent>
-        <SpaceComponent height={20} />
-        <RowComponent>
-          <RowComponent styles={{ flex: 1 }} onPress={() => navigation.navigate('SearchEvents', {
-            isFilter: false,
-          })
-          }>
-            <SearchNormal1 variant='TwoTone' size={20} color={appColors.white} />
-            <View style={{
-              width: 1,
-              backgroundColor: appColors.gray2,
-              marginHorizontal: 10,
-              height: 20
-            }} />
-            <TextComponent flex={1} text='Search...' color={appColors.gray2} size={16} />
+            <CircleComponent color="#524CE0" size={36}>
+              <View>
+                <Notification size={18} color={appColors.white} />
+                <View
+                  style={{
+                    backgroundColor: '#02E9FE',
+                    width: 10,
+                    height: 10,
+                    borderRadius: 4,
+                    borderWidth: 2,
+                    borderColor: '#524CE0',
+                    position: 'absolute',
+                    top: -2,
+                    right: -2,
+                  }}
+                />
+              </View>
+            </CircleComponent>
           </RowComponent>
-          <TagComponent
-            bgColor='#5D56F3'
-            
-            onPress={() => navigation.navigate('SearchEvents', {
-              isFilter: true,
-            })
-            }
-            label='Filters'
-            icon={
-              <CircleComponent size={20} color='#B1AEFA'>
-                <Sort size={16} color='#5D56F3' />
+          <SpaceComponent height={24} />
+          <RowComponent>
+            <RowComponent
+              styles={{flex: 1}}
+              onPress={() =>
+                navigation.navigate('SearchEvents', {
+                  isFilter: false,
+                })
+              }>
+              <SearchNormal1
+                variant="TwoTone"
+                size={22}
+                color={appColors.white}
+              />
+              <View
+                style={{
+                  width: 1,
+                  height: 18,
+                  marginHorizontal: 12,
+                  backgroundColor: '#A29EF0',
+                }}
+              />
+              <TextComponent text="Search..." color={`#A29EF0`} flex={1} />
+            </RowComponent>
+            <RowComponent
+              onPress={() =>
+                navigation.navigate('SearchEvents', {
+                  isFilter: true,
+                })
+              }
+              styles={{
+                backgroundColor: '#5D56F3',
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 100,
+              }}>
+              <CircleComponent size={19.3} color={`#A29EF0`}>
+                <Sort size={12} color={appColors.primary} />
               </CircleComponent>
-            } />
-
-        </RowComponent>
+              <SpaceComponent width={8} />
+              <TextComponent text="Filters" color={appColors.white} />
+            </RowComponent>
+          </RowComponent>
+          <SpaceComponent height={24} />
+        </View>
+        <View style={{marginBottom: -14}}>
+          <CategoriesList isColor />
+        </View>
       </View>
-      <View style={{
-        flex: 1,
-      }}>
-
-      </View>
+      <ScrollView
+        style={[
+          {
+            flex: 1,
+            marginTop: 16,
+          },
+        ]}>
+        <TagBarComponent title="Upcoming Events" onPress={() => {}} />
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={Array.from({length: 5})}
+          renderItem={({item}) => <EventItem type="card" item={itemEvent} />}
+        />
+      </ScrollView>
     </View>
-    // <View style = {{flex: 1, justifyContent:'center', alignItems:'center'}}>
-    //   <Text>Home Screen</Text>
-    //   <Button
-    //     title="LogOut"
-    //     onPress={() => dispatch(removeAuth({}))}
-    //   />
-    // </View>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
