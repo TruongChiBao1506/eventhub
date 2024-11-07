@@ -15,11 +15,11 @@ interface Props {
 }
 
 const CardComponent = (props: Props) => {
-  const {children, isShadow, onPress, styles} = props;
+  const {children, isShadow, onPress, styles, color} = props;
   const localStyles: StyleProp<ViewStyle>[] = [
     globalStyles.card,
     isShadow ? globalStyles.shadow : undefined,
-    {backgroundColor: appColors.white},
+    {backgroundColor: color ?? appColors.white},
     styles,
   ]
   return (
