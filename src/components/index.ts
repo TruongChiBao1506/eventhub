@@ -3,8 +3,10 @@ import AvatarGroup from "./AvatarGroup";
 import ButtonComponent from "./ButtonComponent";
 import CardComponent from "./CardComponent";
 import CategoriesList from "./CategoriesList";
+import ChoiceLocation from "./ChoiceLocation";
 import CircleComponent from "./CircleComponent";
 import ContainerComponent from "./ContainerComponent";
+import DataTimePicker from "./DataTimePicker";
 import EventItem from "./EventItem";
 import InputComponent from "./InputComponent";
 import RowComponent from "./RowComponent";
@@ -29,5 +31,7 @@ export {
     CardComponent,
     EventItem,
     TabBarComponent,
-    AvatarGroup
+    AvatarGroup,
+    ChoiceLocation,
+    DataTimePicker
 };

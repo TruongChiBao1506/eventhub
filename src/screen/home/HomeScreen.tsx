@@ -112,7 +112,7 @@
 
 // // export default HomeScreen
 // // 
-// import GeoLocation from '@react-native-community/geolocation';
+import GeoLocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {
   HambergerMenu,
@@ -152,10 +152,34 @@ import { AddressModel } from '../../models/AddressModel';
 
 const HomeScreen = ({navigation}: any) => {
   const [addressInfo, setAddressInfo] = useState<AddressModel>();
+  const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
+  useEffect(() => {
+    // handleGetCurrentLocation();
+    GeoLocation.getCurrentPosition(position => {
+      if(position.coords){
+        reverseGeocode({lat: position.coords.latitude, long: position.coords.longitude});
+      }
+  });
+  }, []);
 
-  // useEffect(() => {
-  //   handleGetCurrentLocation();
-  // }, []);
+  const reverseGeocode = async ({lat,long}:{lat:number, long:number}) => {
+    const api = `https://us1.locationiq.com/v1/reverse?key=${APIKey}&lat=${lat}&lon=${long}&format=json&accept-language=vi`;
+    try {
+        const res = await axios.get(api);
+        if(res && res.status === 200 && res.data){
+            const item = res.data;
+            setAddressInfo(item);
+            console.log(addressInfo);
+            // console.log(item);
+              
+            
+        }
+        
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
 
   const itemEvent = {
     title: 'International Band Music Concert',
@@ -238,7 +262,7 @@ const HomeScreen = ({navigation}: any) => {
               </RowComponent>
               {addressInfo && (
                 <TextComponent
-                  text={`${addressInfo.address.city}, ${addressInfo.address.countryCode}`}
+                  text={`${addressInfo.address.city}, ${addressInfo.address.country}`}
                   flex={0}
                   color={appColors.white}
                   font={fontFamilies.medium}
