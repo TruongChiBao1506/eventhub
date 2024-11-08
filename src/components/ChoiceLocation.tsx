@@ -12,6 +12,7 @@ import ModalLocation from '../modals/ModalLocation'
 const ChoiceLocation = () => {
 
     const [isVisibleModalLocation, setIsVisibleModalLocation] = useState(false);
+    const [addressSelected, setAddressSelected] = useState('');
 
     return (
         <>
@@ -20,7 +21,7 @@ const ChoiceLocation = () => {
                 styles={[globalStyles.inputContainer]}>
                 <Location variant='Bold' size={22} color={`${appColors.primary}80`} />
                 <SpaceComponent width={12} />
-                <TextComponent text='Choice' flex={1} />
+                <TextComponent text={addressSelected ? addressSelected : 'Choice'} flex={1} />
                 <ArrowRight2 color={appColors.primary} size={22} />
 
             </RowComponent>
@@ -28,7 +29,7 @@ const ChoiceLocation = () => {
             <ModalLocation 
             visible = {isVisibleModalLocation} 
             onClose={()=> setIsVisibleModalLocation(false)} 
-            onSelect={val => console.log(val)
+            onSelect={val => setAddressSelected(val)
             }/>
         </>
     )

@@ -1,27 +1,48 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
-import { ButtonComponent, ChoiceLocation, ContainerComponent, DataTimePicker, DropdownPicker, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '../components';
+import { View, Text, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ButtonComponent, ButtonImagePicker, ChoiceLocation, ContainerComponent, DataTimePicker, DropdownPicker, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '../components';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../redux/reducers/authReducer';
 import userAPI from '../apis/userApi';
+import { SelectModel } from '../models/SelectModel';
 
 
 
+
+
+// const initValues = {
+//   title: '',
+//   description:
+//     '',
+//   location: {
+//     title: '',
+//     address: '',
+//   },
+//   imageUrl: '',
+//   user: [],
+//   authorId: '',
+//   startAt: Date.now(),
+//   endAt: Date.now(),
+//   date: Date.now(),
+// };
 
 const initValues = {
   title: '',
-  description:
-    '',
-  location: {
-    title: '',
-    address: '',
+  description: '',
+  locationTitle: '',
+  locationAddress: '',
+  position: {
+    lat: '',
+    long: '',
   },
-  imageUrl: '',
-  user: [''],
+  photoUrl: '',
+  user: [],
   authorId: '',
   startAt: Date.now(),
   endAt: Date.now(),
   date: Date.now(),
+  price: '',
+  category: '',
 };
 
 const AddNewScreen = () => {
@@ -32,19 +53,47 @@ const AddNewScreen = () => {
 
 
 
+  const [userSelects, setUserSelects] = useState<SelectModel[]>([]);
+  const [fileSelected, setFileSelected] = useState<any>();
 
-  const handleChangeValue = (key: string, value: string | Date) => {
+  const handleChangeValue = (key: string, value: string | Date | string[]) => {
     // console.log(key, value);
     const items = { ...eventData };
     items[`${key}`] = value;
     setEventData(items);
   }
+  useEffect(() => {
+    handleGetAllUsers();
+  }, []);
+
+  const handleGetAllUsers = async () => {
+    const api = `/get-all`;
+    try {
+      const res:any = await userAPI.HandleUser(api);
+      if(res && res.data){
+        const items: SelectModel[] = [];
+        res.data.forEach((item:any)=> item.email && items.push({
+          label: item.email,
+          value: item.id
+        }));
+
+        
+        setUserSelects(items);
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   const handleAddEvent = async () => {
-    // console.log(eventData);
-    const res = await userAPI.HandleUser('/get-all');
-    console.log(res);
+    console.log(eventData);
+    // const res = await userAPI.HandleUser('/get-all');
+    // console.log(res);
     
   }
+
+
 
   return (
     <ContainerComponent isScroll>
@@ -52,6 +101,14 @@ const AddNewScreen = () => {
         <TextComponent title text='Add new' />
       </SectionComponent>
       <SectionComponent>
+        {eventData.photoUrl || fileSelected ? 
+        <Image source={{uri:eventData.photoUrl ? eventData.photoUrl : fileSelected.uri}}
+        style = {{width:'100%', height:250, marginBottom:12}} resizeMode='cover'/>
+        :<></>}
+        <ButtonImagePicker onSelect = {val => 
+          val.type === 'url' ? 
+          handleChangeValue('photoUrl', val.value as string):
+          setFileSelected(val)}/>
         <InputComponent
           placeholder='Title'
           allowClear
@@ -86,16 +143,25 @@ const AddNewScreen = () => {
         
         <DropdownPicker 
         label='Invite users'
-        values = {[]} 
-        onSelect={(val: string)=> console.log(val)}
-        selected={undefined} />
+        values = {userSelects} 
+        onSelect={(val: string | string[])=> handleChangeValue('user', val as string[])}
+        selected={eventData.user}
+        multiple />
         <InputComponent
           placeholder='Title Address'
           allowClear
           value={eventData.location.title}
-          onChange={() => { }}
+          onChange={val => handleChangeValue('location', { ...eventData.location, title: val })}
         />
+        
         <ChoiceLocation />
+        <InputComponent
+          placeholder='Price'
+          allowClear
+          type = "number-pad"
+          value={eventData.price}
+          onChange={val => handleChangeValue('price', val)}
+        />
       </SectionComponent>
       <SectionComponent>
         <ButtonComponent text='Add New' onPress={handleAddEvent} type='primary' />

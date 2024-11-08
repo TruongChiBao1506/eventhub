@@ -37,15 +37,22 @@ import MainNavigators from './src/navigators/MainNavigators';
 import AppRouter from './src/navigators/AppRouter';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Host } from 'react-native-portalize';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <AppRouter />
-      </NavigationContainer>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <Host>
+          <NavigationContainer>
+            <AppRouter />
+          </NavigationContainer>
+        </Host>
+      </Provider>
+    </GestureHandlerRootView>
+
   )
 }
 

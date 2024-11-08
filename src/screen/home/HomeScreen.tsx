@@ -149,10 +149,15 @@ import { globalStyles } from '../../styles/globalStyle';
 import { appColors } from '../../constants/appColor';
 import { fontFamilies } from '../../constants/fontFamilies';
 import { AddressModel } from '../../models/AddressModel';
+import Geocoder from 'react-native-geocoding';
 
+
+Geocoder.init("AIzaSyAP-UXr74H_f4weW5GEcwOyfC0Ft7C2SM8");
 const HomeScreen = ({navigation}: any) => {
   const [addressInfo, setAddressInfo] = useState<AddressModel>();
   const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
+  
+
   useEffect(() => {
     // handleGetCurrentLocation();
     GeoLocation.getCurrentPosition(position => {

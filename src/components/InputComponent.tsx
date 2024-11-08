@@ -77,7 +77,7 @@ const InputComponent = (props: Props) => {
                         size={22}
                         color={appColors.gray}
                     />
-                ) : (
+                ) : (value &&
                     value.length > 0 &&
                     allowClear && (
                         <AntDesign name="close" size={22} color={appColors.text} />

@@ -19,10 +19,11 @@ const ModalLocation = (props: Props) => {
     const [searchKey, setSearchKey] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [locations, setLocations] = useState<LocationModel[]>([]);
+    const [addressSelected, setAddressSelected] = useState('');
     const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
 
     useEffect(() => {
-        if(!searchKey){
+        if (!searchKey) {
             setLocations([]);
         }
     }, [searchKey])
@@ -63,20 +64,32 @@ const ModalLocation = (props: Props) => {
                             value={searchKey}
                             onChange={val => setSearchKey(val)}
                             onEnd={handleSearchLocation} />
+
+                    </View>
+                    <View style={{ position: 'absolute', top: 56, right: 10, left: 10, backgroundColor: appColors.white }}>
+                        {isLoading ? <ActivityIndicator /> : locations.length > 0 ?
+                            <FlatList data={locations} renderItem={({ item }) =>
+                                <TouchableOpacity style={{ marginBottom: 12 }} onPress={() => {
+                                    setAddressSelected(item.display_name);
+                                    setSearchKey('');
+                                }}>
+                                    <TextComponent text={item.display_name} />
+                                </TouchableOpacity>} /> : <View>
+                                <TextComponent text={searchKey ? 'Location not found' : 'Search location'} />
+                            </View>
+                        }
+                        <ButtonComponent text='Confirm' type='primary' onPress={() => {
+                            
+                            onSelect(addressSelected);
+                            onClose();
+                        }} />
                     </View>
                     <SpaceComponent width={12} />
                     <ButtonComponent text='Cancel' type='link' onPress={hanleClose} />
 
 
                 </RowComponent>
-                <View>
-                    {isLoading ? <ActivityIndicator /> : locations.length > 0 ? <FlatList data={locations} renderItem={({ item }) => <>
-                        <TextComponent text={item.display_name} />
-                    </>} /> : <View>
-                        <TextComponent text={searchKey ? 'Location not found': 'Search location'} />
-                    </View>
-                    }
-                </View>
+
             </View>
         </Modal>
     )
