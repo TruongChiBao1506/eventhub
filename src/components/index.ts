@@ -7,6 +7,7 @@ import ChoiceLocation from "./ChoiceLocation";
 import CircleComponent from "./CircleComponent";
 import ContainerComponent from "./ContainerComponent";
 import DataTimePicker from "./DataTimePicker";
+import DropdownPicker from "./DropdownPicker";
 import EventItem from "./EventItem";
 import InputComponent from "./InputComponent";
 import RowComponent from "./RowComponent";
@@ -33,5 +34,6 @@ export {
     TabBarComponent,
     AvatarGroup,
     ChoiceLocation,
-    DataTimePicker
+    DataTimePicker,
+    DropdownPicker
 };
