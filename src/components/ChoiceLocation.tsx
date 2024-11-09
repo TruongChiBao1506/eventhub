@@ -9,7 +9,12 @@ import CardComponent from './CardComponent'
 import SpaceComponent from './SpaceComponent'
 import ModalLocation from '../modals/ModalLocation'
 
-const ChoiceLocation = () => {
+interface Props {
+    onSelect: (val: any) => void;
+  }
+
+const ChoiceLocation = (props: Props) => {
+    const {onSelect} = props;
 
     const [isVisibleModalLocation, setIsVisibleModalLocation] = useState(false);
     const [addressSelected, setAddressSelected] = useState('');
@@ -21,7 +26,7 @@ const ChoiceLocation = () => {
                 styles={[globalStyles.inputContainer]}>
                 <Location variant='Bold' size={22} color={`${appColors.primary}80`} />
                 <SpaceComponent width={12} />
-                <TextComponent text={addressSelected ? addressSelected : 'Choice'} flex={1} />
+                <TextComponent text={addressSelected ? addressSelected : 'Choice'} flex={1} numberOfLine={1} />
                 <ArrowRight2 color={appColors.primary} size={22} />
 
             </RowComponent>
@@ -29,7 +34,10 @@ const ChoiceLocation = () => {
             <ModalLocation 
             visible = {isVisibleModalLocation} 
             onClose={()=> setIsVisibleModalLocation(false)} 
-            onSelect={val => setAddressSelected(val)
+            onSelect={val => {
+                setAddressSelected(val) ;
+                onSelect(val);
+            }
             }/>
         </>
     )

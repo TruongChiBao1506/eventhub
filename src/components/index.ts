@@ -7,7 +7,7 @@ import CategoriesList from "./CategoriesList";
 import ChoiceLocation from "./ChoiceLocation";
 import CircleComponent from "./CircleComponent";
 import ContainerComponent from "./ContainerComponent";
-import DataTimePicker from "./DataTimePicker";
+import DateTimePicker from "./DateTimePicker";
 import DropdownPicker from "./DropdownPicker";
 import EventItem from "./EventItem";
 import InputComponent from "./InputComponent";
@@ -35,7 +35,7 @@ export {
     TabBarComponent,
     AvatarGroup,
     ChoiceLocation,
-    DataTimePicker,
+    DateTimePicker,
     DropdownPicker,
     ButtonImagePicker
 };

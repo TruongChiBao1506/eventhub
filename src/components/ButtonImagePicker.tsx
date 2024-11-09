@@ -110,7 +110,11 @@ const ButtonImagePicker = (props: Props) => {
                         padding: 20,
                     }}>
                         <RowComponent justify='flex-end'>
-                            <TouchableOpacity onPress={() => setIsVibleModalAddUrl(false)}>
+                            <TouchableOpacity onPress={() => {
+                                setImageUrl('');
+                                setIsVibleModalAddUrl(false);
+
+                            }}>
                                 <AntDesign name='close' size={24} color={appColors.text} />
                             </TouchableOpacity>
                         </RowComponent>
@@ -128,8 +132,10 @@ const ButtonImagePicker = (props: Props) => {
                             type = 'link'
                             text='Agress' 
                             onPress={()=>{
+
                                 setIsVibleModalAddUrl(false);
                                 onSelect({type: 'url', value: imageUrl})
+                                setImageUrl('');
                             }}/>
                         </RowComponent>
                     </View>
