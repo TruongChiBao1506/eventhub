@@ -11,6 +11,7 @@ import DateTimePicker from "./DateTimePicker";
 import DropdownPicker from "./DropdownPicker";
 import EventItem from "./EventItem";
 import InputComponent from "./InputComponent";
+import LoadingComponent from "./LoadingComponent";
 import RowComponent from "./RowComponent";
 import SectionComponent from "./SectionComponent";
 import SpaceComponent from "./SpaceComponent";
@@ -37,5 +38,6 @@ export {
     ChoiceLocation,
     DateTimePicker,
     DropdownPicker,
-    ButtonImagePicker
+    ButtonImagePicker,
+    LoadingComponent
 };

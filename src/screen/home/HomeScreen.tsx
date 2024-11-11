@@ -120,7 +120,7 @@ import {
   SearchNormal1,
   Sort,
 } from 'iconsax-react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -136,6 +136,7 @@ import {
   CategoriesList,
   CircleComponent,
   EventItem,
+  LoadingComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
@@ -155,51 +156,54 @@ import { EventModel } from '../../models/EventModel';
 
 
 Geocoder.init("AIzaSyAP-UXr74H_f4weW5GEcwOyfC0Ft7C2SM8");
-const HomeScreen = ({navigation}: any) => {
+const HomeScreen = ({ navigation }: any) => {
   const [addressInfo, setAddressInfo] = useState<AddressModel>();
-  const [events,setEvents] = useState<EventModel[]>([]);
+  const [events, setEvents] = useState<EventModel[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
-  
+
 
   useEffect(() => {
     // handleGetCurrentLocation();
     GeoLocation.getCurrentPosition(position => {
-      if(position.coords){
-        reverseGeocode({lat: position.coords.latitude, long: position.coords.longitude});
+      if (position.coords) {
+        reverseGeocode({ lat: position.coords.latitude, long: position.coords.longitude });
       }
-  }, error =>{console.log(error)},{});
-      getAllEvents();
+    }, error => { console.log(error) }, {});
+    getAllEvents();
   }, []);
 
 
   const getAllEvents = async () => {
-    const api = `/get-events?limit=5`;
+    const api = `/get-events?limit=5&date=${new Date().toISOString()}`;
+    setIsLoading(true);
     try {
-      const res = await eventAPI.HandleEvent(api);    
+      const res = await eventAPI.HandleEvent(api);
+      setIsLoading(false);
       res && res.data && setEvents(res.data);
       console.log(events);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
-      
     }
   }
 
-  const reverseGeocode = async ({lat,long}:{lat:number, long:number}) => {
+  const reverseGeocode = async ({ lat, long }: { lat: number, long: number }) => {
     const api = `https://us1.locationiq.com/v1/reverse?key=${APIKey}&lat=${lat}&lon=${long}&format=json&accept-language=vi`;
     try {
-        const res = await axios.get(api);
-        if(res && res.status === 200 && res.data){
-            const item = res.data;
-            setAddressInfo(item);
-            console.log(addressInfo);
-            // console.log(item);
-              
-            
-        }
-        
+      const res = await axios.get(api);
+      if (res && res.status === 200 && res.data) {
+        const item = res.data;
+        setAddressInfo(item);
+        console.log(addressInfo);
+        // console.log(item);
+
+
+      }
+
     } catch (error) {
       console.log(error);
-      
+
     }
   };
 
@@ -264,12 +268,12 @@ const HomeScreen = ({navigation}: any) => {
           borderBottomRightRadius: 40,
           paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
         }}>
-        <View style={{paddingHorizontal: 16}}>
+        <View style={{ paddingHorizontal: 16 }}>
           <RowComponent>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <HambergerMenu size={24} color={appColors.white} />
             </TouchableOpacity>
-            <View style={[{flex: 1, alignItems: 'center'}]}>
+            <View style={[{ flex: 1, alignItems: 'center' }]}>
               <RowComponent>
                 <TextComponent
                   text="Current Location"
@@ -315,7 +319,7 @@ const HomeScreen = ({navigation}: any) => {
           <SpaceComponent height={20} />
           <RowComponent>
             <RowComponent
-              styles={{flex: 1}}
+              styles={{ flex: 1 }}
               onPress={() =>
                 navigation.navigate('SearchEvents', {
                   isFilter: false,
@@ -358,7 +362,7 @@ const HomeScreen = ({navigation}: any) => {
           </RowComponent>
           <SpaceComponent height={20} />
         </View>
-        <View style={{marginBottom: -16}}>
+        <View style={{ marginBottom: -16 }}>
           <CategoriesList isFill />
         </View>
       </View>
@@ -370,21 +374,26 @@ const HomeScreen = ({navigation}: any) => {
             marginTop: Platform.OS === 'ios' ? 22 : 18,
           },
         ]}>
-        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
-          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={events}
-            renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} item={item} type="card" />
-            )}
-          />
+        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 24 }}>
+          <TabBarComponent title="Upcoming Events" onPress={() => { }} />
+          {
+            events.length > 0 ?
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={events}
+                renderItem={({ item, index }) => (
+                  <EventItem key={`event${index}`} item={item} type="card" />
+                )}
+              />
+              : <LoadingComponent isLoading={isLoading} values={events.length} />
+          }
+
         </SectionComponent>
         <SectionComponent>
           <ImageBackground
             source={require('../../assets/images/invite-image.png')}
-            style={{flex: 1, padding: 16, minHeight: 127}}
+            style={{ flex: 1, padding: 16, minHeight: 127 }}
             imageStyle={{
               resizeMode: 'cover',
               borderRadius: 12,
@@ -412,16 +421,21 @@ const HomeScreen = ({navigation}: any) => {
             </RowComponent>
           </ImageBackground>
         </SectionComponent>
-        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
-          <TabBarComponent title="Nearby You" onPress={() => {}} />
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={events}
-            renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} item={item} type="card" />
-            )}
-          />
+        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 24 }}>
+          <TabBarComponent title="Nearby You" onPress={() => { }} />
+          {
+            events.length > 0 ?
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={events}
+                renderItem={({ item, index }) => (
+                  <EventItem key={`event${index}`} item={item} type="card" />
+                )}
+              />
+              : <LoadingComponent isLoading={isLoading} values={events.length} />
+          }
+
         </SectionComponent>
       </ScrollView>
     </View>
