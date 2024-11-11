@@ -150,11 +150,14 @@ import { appColors } from '../../constants/appColor';
 import { fontFamilies } from '../../constants/fontFamilies';
 import { AddressModel } from '../../models/AddressModel';
 import Geocoder from 'react-native-geocoding';
+import eventAPI from '../../apis/eventApi';
+import { EventModel } from '../../models/EventModel';
 
 
 Geocoder.init("AIzaSyAP-UXr74H_f4weW5GEcwOyfC0Ft7C2SM8");
 const HomeScreen = ({navigation}: any) => {
   const [addressInfo, setAddressInfo] = useState<AddressModel>();
+  const [events,setEvents] = useState<EventModel[]>([]);
   const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
   
 
@@ -164,8 +167,22 @@ const HomeScreen = ({navigation}: any) => {
       if(position.coords){
         reverseGeocode({lat: position.coords.latitude, long: position.coords.longitude});
       }
-  });
+  }, error =>{console.log(error)},{});
+      getAllEvents();
   }, []);
+
+
+  const getAllEvents = async () => {
+    const api = `/get-events?limit=5`;
+    try {
+      const res = await eventAPI.HandleEvent(api);    
+      res && res.data && setEvents(res.data);
+      console.log(events);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   const reverseGeocode = async ({lat,long}:{lat:number, long:number}) => {
     const api = `https://us1.locationiq.com/v1/reverse?key=${APIKey}&lat=${lat}&lon=${long}&format=json&accept-language=vi`;
@@ -186,21 +203,21 @@ const HomeScreen = ({navigation}: any) => {
     }
   };
 
-  const itemEvent = {
-    title: 'International Band Music Concert',
-    description:
-      'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.',
-    location: {
-      title: 'Gala Convention Center',
-      address: '36 Guild Street London, UK',
-    },
-    imageUrl: '',
-    user: [''],
-    authorId: '',
-    startAt: Date.now(),
-    endAt: Date.now(),
-    date: Date.now(),
-  };
+  // const itemEvent = {
+  //   title: 'International Band Music Concert',
+  //   description:
+  //     'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.',
+  //   location: {
+  //     title: 'Gala Convention Center',
+  //     address: '36 Guild Street London, UK',
+  //   },
+  //   imageUrl: '',
+  //   user: [''],
+  //   authorId: '',
+  //   startAt: Date.now(),
+  //   endAt: Date.now(),
+  //   date: Date.now(),
+  // };
 
   // const handleGetCurrentLocation = async () => {
   //   GeoLocation.getCurrentPosition(position => {
@@ -358,9 +375,9 @@ const HomeScreen = ({navigation}: any) => {
           <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal
-            data={Array.from({length: 5})}
+            data={events}
             renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} item={itemEvent} type="card" />
+              <EventItem key={`event${index}`} item={item} type="card" />
             )}
           />
         </SectionComponent>
@@ -377,6 +394,7 @@ const HomeScreen = ({navigation}: any) => {
 
             <RowComponent justify="flex-start">
               <TouchableOpacity
+                onPress={getAllEvents}
                 style={[
                   globalStyles.button,
                   {
@@ -399,9 +417,9 @@ const HomeScreen = ({navigation}: any) => {
           <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal
-            data={Array.from({length: 5})}
+            data={events}
             renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} item={itemEvent} type="card" />
+              <EventItem key={`event${index}`} item={item} type="card" />
             )}
           />
         </SectionComponent>

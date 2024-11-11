@@ -10,7 +10,13 @@ import { LocationModel } from '../models/LocationModel';
 interface Props {
     visible: boolean;
     onClose: () => void;
-    onSelect: (val: string) => void
+    onSelect: (val: {
+        address: string;
+        postion?: {
+            lat: number;
+            long: number;
+        };
+    }) => void;
 
 }
 
@@ -20,6 +26,10 @@ const ModalLocation = (props: Props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [locations, setLocations] = useState<LocationModel[]>([]);
     const [addressSelected, setAddressSelected] = useState('');
+    const [currentLocation, setCurrentLocation] = useState<{
+        lat: number;
+        long: number;
+    }>();
     const APIKey = 'pk.4c554ed3b1014f0b4a503760d05d032c';
 
     useEffect(() => {
@@ -70,7 +80,12 @@ const ModalLocation = (props: Props) => {
                         {isLoading ? <ActivityIndicator /> : locations.length > 0 ?
                             <FlatList data={locations} renderItem={({ item }) =>
                                 <TouchableOpacity style={{ marginBottom: 12 }} onPress={() => {
+                                    const lc:any = {
+                                        lat: item.lat,
+                                        long: item.lon
+                                    }
                                     setAddressSelected(item.display_name);
+                                    setCurrentLocation(lc);
                                     setSearchKey('');
                                 }}>
                                     <TextComponent text={item.display_name} />
@@ -79,8 +94,11 @@ const ModalLocation = (props: Props) => {
                             </View>
                         }
                         <ButtonComponent text='Confirm' type='primary' onPress={() => {
-                            
-                            onSelect(addressSelected);
+
+                            onSelect({
+                                address: addressSelected,
+                                postion: currentLocation
+                            });
                             onClose();
                         }} />
                     </View>

@@ -62,8 +62,8 @@ const AddNewScreen = () => {
   const [fileSelected, setFileSelected] = useState<any>();
   const [errorsMess, setErrorsMess] = useState<string[]>([]);
 
-  const handleChangeValue = (key: string, value: string | Date | string[]) => {
-    // console.log(key, value);
+  const handleChangeValue = (key: string, value: string | Date | string[] | Number) => {
+    console.log(key, value);
     const items = { ...eventData };
     items[`${key}`] = value;
     setEventData(items);
@@ -100,13 +100,16 @@ const AddNewScreen = () => {
   const handleLocation = (val: any) => {
     const items = { ...eventData };
     // items.position = val.postion;
-    items.locationAddress = val;
-
-    setEventData(items);
+    console.log(val);
+    
+    items.locationAddress = val.address;
+    items.position.lat = val.postion.lat;
+    items.position.long = val.postion.long;
+    setEventData(items); 
   };
 
   const handleAddEvent = async () => {
-    // console.log(eventData);
+    console.log(eventData);
     // const res = await userAPI.HandleUser('/get-all');
     // console.log(res);
     if (fileSelected) {
@@ -203,13 +206,17 @@ const AddNewScreen = () => {
           <DateTimePicker
             label='Start at:'
             type='time'
-            onSelect={val => handleChangeValue('startAt', val)}
+            onSelect={val => {
+              console.log(val);
+              
+              handleChangeValue('startAt', val.getTime())
+            }}
             selected={eventData.startAt} />
           <SpaceComponent width={20} />
           <DateTimePicker
             label='End at:'
             type='time'
-            onSelect={val => handleChangeValue('endAt', val)}
+            onSelect={val => handleChangeValue('endAt', val.getTime())}
             selected={eventData.endAt} />
         </RowComponent>
         <DateTimePicker

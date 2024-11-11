@@ -21,7 +21,7 @@ const DataTimePicker = (props:Props) => {
 
     const {selected, type, onSelect, label} = props;
     const [isShowDatePicker, setIsShowDatePicker] =  useState(false);
-    // console.log(selected);
+    // console.log("toNumber:",selected);
     
   return (
     <View style = {{flex:1}}>
