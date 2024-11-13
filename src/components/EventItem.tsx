@@ -83,7 +83,7 @@ import {useNavigation} from '@react-navigation/native';
 import { globalStyles } from '../styles/globalStyle';
 import { appColors } from '../constants/appColor';
 import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
+import { authSelector, AuthState } from '../redux/reducers/authReducer';
 import { numberToString } from '../utils/numberToString';
 
 interface Props {
@@ -93,13 +93,11 @@ interface Props {
 
 const EventItem = (props: Props) => {
   const {item, type} = props;
-  const auth = useSelector(authSelector);
-  
-  console.log(new Date(item.date).toISOString());
-  
-
+  // const auth = useSelector(authSelector);
   const navigation: any = useNavigation();
+  const auth: AuthState = useSelector(authSelector);
 
+  
   return (
     <CardComponent
       isShadow
@@ -127,7 +125,7 @@ const EventItem = (props: Props) => {
               text={appInfo.monthNames[new Date(item.date).getMonth()].substring(0, 3)}
             />
           </CardComponent>
-          {item.followers && item.followers.includes(auth._id) && (
+          {auth.follow_events && auth.follow_events.includes(item._id) && (
           <CardComponent styles={[globalStyles.noSpaceCard]} color="#ffffffB3">
             <MaterialIcons
               name="bookmark"
