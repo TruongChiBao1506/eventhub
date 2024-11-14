@@ -10,22 +10,22 @@ import ForgotPassword from '../screen/auth/ForgotPassword';
 
 const AuthNavigator = () => {
 
-  const [isExistingUser, setIsExistingUser] = useState(false);
+  // const [isExistingUser, setIsExistingUser] = useState(false);
 
-  useEffect(() => {
-    checkUserExisting();
-  }, []);
+  // useEffect(() => {
+  //   checkUserExisting();
+  // }, []);
 
   const Stack = createNativeStackNavigator();
 
-  const checkUserExisting = async () => {
-    const res = await AsyncStorage.getItem('auth');
+  // const checkUserExisting = async () => {
+  //   const res = await AsyncStorage.getItem('auth');
 
-    res && setIsExistingUser(true);
-  }
-  console.log(isExistingUser);
+  //   res && setIsExistingUser(true);
+  // }
+  // console.log(isExistingUser);
   return <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {!isExistingUser && <Stack.Screen name="OnboadingScreen" component={OnboadingScreen} />}
+    <Stack.Screen name="OnboadingScreen" component={OnboadingScreen} />
     <Stack.Screen name="LoginScreen" component={LoginScreen} />
     <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
     <Stack.Screen name="Verification" component={Verification} />

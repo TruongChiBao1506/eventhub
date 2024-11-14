@@ -61,7 +61,7 @@ const TabNavigator = () => {
                   size={52}
                   styles={[
                     globalStyles.shadow,
-                    {marginTop: Platform.OS === 'ios' ? -50 : -20},
+                    {marginTop: Platform.OS === 'ios' ? -50 : -60},
                   ]}>
                   <AddSquare size={24} color={appColors.white} variant="Bold" />
                 </CircleComponent>
@@ -87,7 +87,7 @@ const TabNavigator = () => {
           );
         },
       })}>
-      <Tab.Screen name="Explore" component={ExploreNavigator} />
+      <Tab.Screen name="Explore" component={DrawerNavigator} />
       <Tab.Screen name="Events" component={EventNavigator} />
       <Tab.Screen name="Add" component={AddNewScreen} />
       <Tab.Screen name="Map" component={MapNavigator} />

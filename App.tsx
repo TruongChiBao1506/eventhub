@@ -29,7 +29,7 @@
 // }
 // export default App;
 import { View, Text, StatusBar } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from './src/screen/home/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -39,9 +39,14 @@ import { Provider } from 'react-redux';
 import store from './src/redux/store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Host } from 'react-native-portalize';
+import { HandleNotification } from './src/utils/handleNotification';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
+  useEffect(() => {
+    HandleNotification.checkNotificationPerson();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>

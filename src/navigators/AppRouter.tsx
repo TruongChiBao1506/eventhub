@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addAuth, addFollowedEvent, authSelector, AuthState } from '../redux/reducers/authReducer'
 import AuthNavigator from './AuthNavigator'
 import MainNavigators from './MainNavigators'
-import { SplashScreen } from '../screen'
+import { HomeScreen, ProfileScreen, SplashScreen } from '../screen'
 import userAPI from '../apis/userApi'
 import { UserHandle } from '../utils/UserHandlers'
 
@@ -42,7 +42,8 @@ const AppRouter = () => {
         res && dispatch(
             addAuth(JSON.parse(res)),
         );
-
+        // console.log(JSON.parse(res));
+        
     };
 
     return (

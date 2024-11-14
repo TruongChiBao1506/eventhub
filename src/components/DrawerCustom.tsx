@@ -14,7 +14,7 @@ import {
  
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
   import {useDispatch, useSelector} from 'react-redux';
-  import {authSelector, removeAuth} from '../redux/reducers/authReducer';
+  import {authSelector, AuthState, removeAuth} from '../redux/reducers/authReducer';
 
   import {
     Bookmark2,
@@ -31,12 +31,15 @@ import {
   import AsyncStorage from '@react-native-async-storage/async-storage';
 import { appColors } from '../constants/appColor';
 import { globalStyles } from '../styles/globalStyle';
+import { HandleNotification } from '../utils/handleNotification';
   
   const DrawerCustom = ({navigation}: any) => {
-    const user = useSelector(authSelector);
+    const auth = useSelector(authSelector);
     const dispatch = useDispatch();
     const size = 20;
     const color = appColors.gray;
+
+    
     const profileMenu = [
       {
         key: 'MyProfile',
@@ -80,25 +83,50 @@ import { globalStyles } from '../styles/globalStyle';
       },
     ];
   
-    const handleSignOut = async () => {
-      // await GoogleSignin.signOut();
-      // await LoginManager.logOut();
-      dispatch(removeAuth({}));
-      await AsyncStorage.clear();
-    };
+    const handleLogOut = async () => {
+      const fcmtoken = await AsyncStorage.getItem('fcmtoken');
   
+      if(fcmtoken){
+        if(auth.fcmTokens && auth.fcmTokens.length > 0){
+          const items = [...auth.fcmTokens];
+          const index = auth.fcmTokens.findIndex((element:any) => element === fcmtoken);
+  
+          if(index !== -1){
+              items.splice(index, 1); 
+          }
+          await HandleNotification.update(auth.id, items);
+          
+        }
+      }
+      await AsyncStorage.removeItem('auth');
+      dispatch(removeAuth({}));
+      
+      
+    };
+  const handleNavigation = (key: string) =>{
+    switch (key) {
+
+      case 'SignOut':
+        handleLogOut();
+        break;
+      case 'MyProfile':
+        navigation.navigate('Profile', {
+          screen: 'ProfileScreen',
+        });
+        break;
+      default:
+        console.log(key);
+        break;
+        
+    }
+    navigation.closeDrawer();
+  }
     return (
       <View style={[localStyles.container]}>
         <TouchableOpacity
-          onPress={() => {
-            navigation.closeDrawer();
-  
-            navigation.navigate('Profile', {
-              screen: 'ProfileScreen',
-            });
-          }}>
-          {user.photo ? (
-            <Image source={{uri: user.photo}} style={[localStyles.avatar]} />
+          onPress={() => handleNavigation('MyProfile')}>
+          {auth.photo ? (
+            <Image source={{uri: auth.photo}} style={[localStyles.avatar]} />
           ) : (
             <View
               style={[localStyles.avatar, {backgroundColor: appColors.gray2}]}>
@@ -107,16 +135,16 @@ import { globalStyles } from '../styles/globalStyle';
                 size={22}
                 color={appColors.white}
                 text={
-                  user.name
-                    ? user.name
+                  auth.name
+                    ? auth.name
                         .split(' ')
-                        [user.name.split(' ').length - 1].substring(0, 1)
+                        [auth.name.split(' ').length - 1].substring(0, 1)
                     : ''
                 }
               />
             </View>
           )}
-          <TextComponent text={user.name} title size={18} />
+          <TextComponent text={auth.name} title size={18} />
         </TouchableOpacity>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -125,14 +153,7 @@ import { globalStyles } from '../styles/globalStyle';
           renderItem={({item, index}) => (
             <RowComponent
               styles={[localStyles.listItem]}
-              onPress={
-                item.key === 'SignOut'
-                  ? () => handleSignOut()
-                  : () => {
-                      console.log(item.key);
-                      navigation.closeDrawer();
-                    }
-              }>
+              onPress={()=> handleNavigation(item.key)}>
               {item.icon}
               <TextComponent
                 text={item.title}
