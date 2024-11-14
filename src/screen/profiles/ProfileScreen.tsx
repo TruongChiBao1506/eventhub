@@ -23,13 +23,17 @@ const ProfileScreen = ({navigation,route}:any) => {
   const dispatch = useDispatch()
   const auth: AuthState = useSelector(authSelector);
 
-  console.log(auth);
+  
   
 
   useEffect(() => {
     if(route.params){
       const {id} = route.params;
       setProfileId(id);
+
+      if(route.params.isUpdated){
+        getProfile();
+      }
     }else{
       setProfileId(auth.id);
     }
@@ -96,7 +100,7 @@ const ProfileScreen = ({navigation,route}:any) => {
           </RowComponent>
         </SectionComponent>
             {
-              auth.id !== profileId ? <AboutProfile/> : <EditProfile/>
+              auth.id !== profileId ? <AboutProfile/> : <EditProfile profile={profile}/>
             }
       </>
       :<TextComponent text='profile not found!'/>}

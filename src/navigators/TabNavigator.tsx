@@ -36,6 +36,7 @@ const TabNavigator = () => {
           alignItems: 'center',
           backgroundColor: appColors.white,
         },
+        tabBarHideOnKeyboard: true,
         tabBarIcon: ({focused, color, size}) => {
           let icon: ReactNode;
           color = focused ? appColors.primary : appColors.gray5;

@@ -128,7 +128,7 @@ import { HandleNotification } from '../utils/handleNotification';
     return (
       <View style={[localStyles.container]}>
         <AvatarComponent onPress={()=>handleNavigation('MyProfile')}  
-        photoURL={auth.photoURL} 
+        photoURL={auth.photo} 
         name={auth.name ? auth.name : auth.email}/>
         {/* <TouchableOpacity
           onPress={() => handleNavigation('MyProfile')}>

@@ -8,6 +8,7 @@ import EventsScreen from "./events/EventsScreen";
 import SearchEvents from "./events/SearchEvents";
 import HomeScreen from "./home/HomeScreen";
 import MapScreen from "./maps/MapScreen";
+import EditProfileScreen from "./profiles/EditProfileScreen";
 import ProfileScreen from "./profiles/ProfileScreen";
 import SplashScreen from "./SplashScreen";
 
@@ -33,4 +34,5 @@ export {
     EventsScreen,
     SearchEvents,
     EventDetail,
+    EditProfileScreen
 };
