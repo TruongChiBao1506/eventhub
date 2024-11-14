@@ -10,7 +10,7 @@ import {
     FlatList,
   } from 'react-native';
   import React from 'react';
-  import {ButtonComponent, RowComponent, SpaceComponent, TextComponent} from '.';
+  import {AvatarComponent, ButtonComponent, RowComponent, SpaceComponent, TextComponent} from '.';
  
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
   import {useDispatch, useSelector} from 'react-redux';
@@ -123,7 +123,10 @@ import { HandleNotification } from '../utils/handleNotification';
   }
     return (
       <View style={[localStyles.container]}>
-        <TouchableOpacity
+        <AvatarComponent onPress={()=>handleNavigation('MyProfile')}  
+        photoURL={auth.photoURL} 
+        name={auth.name ? auth.name : auth.email}/>
+        {/* <TouchableOpacity
           onPress={() => handleNavigation('MyProfile')}>
           {auth.photo ? (
             <Image source={{uri: auth.photo}} style={[localStyles.avatar]} />
@@ -145,7 +148,7 @@ import { HandleNotification } from '../utils/handleNotification';
             </View>
           )}
           <TextComponent text={auth.name} title size={18} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <FlatList
           showsVerticalScrollIndicator={false}
           data={profileMenu}

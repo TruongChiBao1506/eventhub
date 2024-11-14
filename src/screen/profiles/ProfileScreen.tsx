@@ -1,43 +1,57 @@
-import { View, Text, Button } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Button, ActivityIndicator } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { authSelector, AuthState, removeAuth } from '../../redux/reducers/authReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { HandleNotification } from '../../utils/handleNotification'
 import { LoadingModal } from '../../modals'
+import { AvatarComponent, ButtonComponent, ContainerComponent, LoadingComponent, RowComponent, SectionComponent, TextComponent } from '../../components'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import userAPI from '../../apis/userApi'
+import { ProfileModel } from '../../models/ProfileModel'
+import { globalStyles } from '../../styles/globalStyle'
 
 const ProfileScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState<ProfileModel>();
   const dispatch = useDispatch()
   const auth: AuthState = useSelector(authSelector);
-  const handleLogOut = async () => {
-    setIsLoading(true);
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
 
-    if(fcmtoken){
-      if(auth.fcmTokens && auth.fcmTokens.length > 0){
-        const items = [...auth.fcmTokens];
-        const index = auth.fcmTokens.findIndex(element => element === fcmtoken);
-
-        if(index !== -1){
-            items.splice(index, 1); 
-        }
-        await HandleNotification.update(auth.id, items);
-        
-      }
+  useEffect(() => {
+    if(auth){
+      getProfile();
     }
-    await AsyncStorage.removeItem('auth');
-    dispatch(removeAuth({}));
-    
-    setIsLoading(false);
-    
-  };
+
+  }, [])
+
+  const getProfile = async ()=>{
+    const api = `/get-profile?uid=${auth.id}`;
+    setIsLoading(true);
+    try {
+      const res = await userAPI.HandleUser(api);
+     res && res.data && setProfile(res.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  }
   return (
-    <View style = {{flex:1, justifyContent:'center', alignItems:'center'}}>
-      <Text>ProfileScreen</Text>
-      <Button onPress={handleLogOut} title='LogOut'/>
-      <LoadingModal visible={isLoading}/>
-    </View>
+    <ContainerComponent back title='Profile'>
+      {isLoading ? <ActivityIndicator/> 
+      : profile ? 
+      <>
+        <SectionComponent>
+          <RowComponent >
+              <AvatarComponent photoURL={profile.photoUrl} 
+              name = {profile.name ? profile.name : profile.email}
+              size={120}/>
+
+          </RowComponent>
+        </SectionComponent>
+      </>
+      :<TextComponent text='profile not found!'/>}
+    </ContainerComponent>
   )
 }
 
