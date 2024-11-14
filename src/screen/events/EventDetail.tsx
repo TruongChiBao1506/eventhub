@@ -1,7 +1,7 @@
 import { View, Text, ImageBackground, TouchableOpacity, Platform, StatusBar, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import { AvatarGroup, ButtonComponent, CardComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components'
+import { AvatarGroup, ButtonComponent, CardComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from '../../components'
 import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Location } from 'iconsax-react-native'
 import { appColors } from '../../constants/appColor'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -10,22 +10,30 @@ import LinearGradient from 'react-native-linear-gradient'
 import { EventModel } from '../../models/EventModel'
 import { fontFamilies } from '../../constants/fontFamilies'
 import { useDispatch, useSelector } from 'react-redux'
-import { authSelector, AuthState } from '../../redux/reducers/authReducer'
+import { authSelector, AuthState, updateFollowing } from '../../redux/reducers/authReducer'
 import eventAPI from '../../apis/eventApi'
 import { LoadingModal } from '../../modals'
 import { UserHandle } from '../../utils/UserHandlers'
 import { DateTime } from '../../utils/DateTime'
 import { appInfo } from '../../constants/appInfos'
+import userAPI from '../../apis/userApi'
+import { ProfileModel } from '../../models/ProfileModel'
+import ModalInvite from '../../modals/ModalInvite'
 
 const EventDetail = ({ navigation, route }: any) => {
     const { item }: { item: EventModel } = route.params;
     const [isLoading, setIsLoading] = useState(false);
     const [followers, setFollowers] = useState<string[]>([]);
+    const [profile, setProfile] = useState<ProfileModel>();
+    const [isVisibleModalInvite, setIsVisibleModalInvite] = useState(false);
     const auth: AuthState = useSelector(authSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        item && getFollowersById();
+        if (item) {
+            getFollowersById();
+            getProfile(item.authorId);
+        }
     }, [item]);
 
     const getFollowersById = async () => {
@@ -69,6 +77,34 @@ const EventDetail = ({ navigation, route }: any) => {
 
         }
     }
+    const getProfile = async (id: string) => {
+        const api = `/get-profile?uid=${id}`;
+        setIsLoading(true);
+        try {
+            const res = await userAPI.HandleUser(api);
+            res && res.data && setProfile(res.data);
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+        }
+    }
+
+    const handleToggleFolloing = async(id:string)=>{
+        const api = `/update-following`;
+        setIsLoading(true);
+        try {
+            const res = await userAPI.HandleUser(api, {
+              uid: auth.id,
+              authorId: id,
+            },'put');
+            dispatch(updateFollowing(res.data));
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+        }
+      }
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff', zIndex: -1 }}>
@@ -114,14 +150,18 @@ const EventDetail = ({ navigation, route }: any) => {
                                 width: '90%',
                             }]}>
                                 <AvatarGroup size={36} userIds={item.user} />
-                                <TouchableOpacity style={[globalStyles.button, { backgroundColor: appColors.primary, paddingVertical: 8 }]}>
+                                <TouchableOpacity 
+                                onPress={()=>setIsVisibleModalInvite(true)}
+                                style={[globalStyles.button, { backgroundColor: appColors.primary, paddingVertical: 8 }]}>
                                     <TextComponent text='Invite' color={appColors.white} />
                                 </TouchableOpacity>
                             </RowComponent>
                         </View>
                     )
                         : <>
-                            <ButtonComponent type='primary' styles={{ borderRadius: 100 }} text='Invite' />
+                            <ButtonComponent 
+                            onPress={()=>setIsVisibleModalInvite(true)}
+                            type='primary' styles={{ borderRadius: 100 }} text='Invite' />
                         </>}
 
                 </SectionComponent>
@@ -154,16 +194,25 @@ const EventDetail = ({ navigation, route }: any) => {
                                 <TextComponent text={item.locationAddress} color={appColors.gray} />
                             </View>
                         </RowComponent>
-                        <RowComponent styles={{ marginBottom: 20 }} onPress={()=>navigation.navigate('ProfileScreen',{id: item.authorId}
-                        )}>
-                            <Image source={{ uri: 'https://gamek.mediacdn.vn/133514250583805952/2022/5/18/photo-1-16528608926331302726659.jpg' }}
-                                style={{ width: 48, height: 48, borderRadius: 12, resizeMode: 'cover' }} />
-                            <SpaceComponent width={16} />
-                            <View style={{ flex: 1, height: 48, justifyContent: 'space-around' }}>
-                                <TextComponent text='Son Tung MTP' font={fontFamilies.medium} size={16} />
-                                <TextComponent text='Tuesday, 4:00PM - 9:00PM' color={appColors.gray} />
-                            </View>
-                        </RowComponent>
+                        {
+                            profile && <RowComponent styles={{ marginBottom: 20 }} onPress={() => navigation.navigate('ProfileScreen', { id: item.authorId }
+                            )}>
+
+                                <Image source={{ uri: profile.photoUrl? profile.photoUrl: 'https://img.icons8.com/cute-clipart/64/user-male-circle.png' }}
+                                    style={{ width: 48, height: 48, borderRadius: 12, resizeMode: 'cover' }} />
+                                <SpaceComponent width={16} />
+                                <View style={{ flex: 1, height: 48, justifyContent: 'space-around' }}>
+                                    <TextComponent text={profile.name ? profile.name: profile?.email} font={fontFamilies.medium} size={16} />
+                                    <TextComponent text={profile.type ? profile.type : 'Personal'} color={appColors.gray} />
+                                </View>
+                                <TagComponent label={auth.following && auth.following.includes(item.authorId)?'Unfollow':'Follow'} onPress={()=>handleToggleFolloing(item.authorId)}
+
+                                styles = {{backgroundColor: `${appColors.primary}20`, borderRadius:12}}
+                                textStyle = {{fontFamily: fontFamilies.regular}}
+                                textColor={appColors.primary}/>
+                            </RowComponent>
+                        }
+
                     </SectionComponent>
                     <TabBarComponent title='About Event' />
                     <SectionComponent>
@@ -171,7 +220,7 @@ const EventDetail = ({ navigation, route }: any) => {
                     </SectionComponent>
                 </View>
 
-                 <SpaceComponent height={100} />  
+                <SpaceComponent height={100} />
             </ScrollView>
             <LinearGradient colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,1)']}
                 style={{
@@ -200,6 +249,7 @@ const EventDetail = ({ navigation, route }: any) => {
                     } />
             </LinearGradient>
             <LoadingModal visible={isLoading} />
+            <ModalInvite visible={isVisibleModalInvite} onClose={()=>setIsVisibleModalInvite(false)}/>
         </View>
 
     )

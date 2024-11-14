@@ -26,7 +26,11 @@ const AppRouter = () => {
     }, [])
 
     useEffect(() => {
-        UserHandle.getFollowersById(auth.id, dispatch);
+        if (auth.id) {
+            UserHandle.getFollowersById(auth.id, dispatch);
+            UserHandle.getFollowingsByUid(auth.id, dispatch);
+        }
+
     }, [auth.id]);
 
     const handleGetDatas = async () => {
@@ -43,7 +47,7 @@ const AppRouter = () => {
             addAuth(JSON.parse(res)),
         );
         // console.log(JSON.parse(res));
-        
+
     };
 
     return (

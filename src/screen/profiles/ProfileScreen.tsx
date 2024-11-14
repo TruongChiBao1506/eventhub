@@ -109,7 +109,7 @@ const ProfileScreen = ({navigation,route}:any) => {
           </RowComponent>
         </SectionComponent>
             {
-              auth.id !== profileId ? <AboutProfile/> : <EditProfile profile={profile}/>
+              auth.id !== profileId ? <AboutProfile profile={profile}/> : <EditProfile profile={profile}/>
             }
       </>
       :<TextComponent text='profile not found!'/>}
