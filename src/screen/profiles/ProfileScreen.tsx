@@ -1,7 +1,7 @@
 import { View, Text, Button, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { authSelector, AuthState, removeAuth } from '../../redux/reducers/authReducer'
+import { addAuth, authSelector, AuthState, removeAuth } from '../../redux/reducers/authReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { HandleNotification } from '../../utils/handleNotification'
 import { LoadingModal } from '../../modals'
@@ -12,6 +12,8 @@ import { ProfileModel } from '../../models/ProfileModel'
 import { globalStyles } from '../../styles/globalStyle'
 import AboutProfile from './components/AboutProfile'
 import EditProfile from './components/EditProfile'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { appColors } from '../../constants/appColor'
 
 const ProfileScreen = ({navigation,route}:any) => {
   
@@ -33,11 +35,13 @@ const ProfileScreen = ({navigation,route}:any) => {
 
       if(route.params.isUpdated){
         getProfile();
+
+        
       }
     }else{
       setProfileId(auth.id);
     }
-  }, [route])
+  }, [route.params])
 
   useEffect(() => {
     if(profileId){
@@ -69,8 +73,10 @@ const ProfileScreen = ({navigation,route}:any) => {
       
     }
   };
+  // console.log(profile);
+  
   return (
-    <ContainerComponent back title='Profile'>
+    <ContainerComponent back title={route.params ? '':'Profile'} right = {<ButtonComponent  icon = {<MaterialIcons name = 'more-vert' size={24} color={appColors.text} onPress={()=>{}}/>} />}>
       {isLoading ? <ActivityIndicator/> 
       : profile ? 
       <>
@@ -91,10 +97,13 @@ const ProfileScreen = ({navigation,route}:any) => {
           <RowComponent>
               <View style = {[globalStyles.center,{flex:1}]}>
                 <TextComponent title text={`${profile.following.length}`} size={20}/>
+                <SpaceComponent height={8}/>
                 <TextComponent text='Following'/>
               </View>
+              <View style = {{backgroundColor:appColors.gray2, width:1, height:'100%'}}/>
               <View style = {[globalStyles.center,{flex:1}]}>
                 <TextComponent title text={`${userFollowers.length}`} size={20}/>
+                <SpaceComponent height={8}/>
                 <TextComponent text='Followers'/>
               </View>
           </RowComponent>

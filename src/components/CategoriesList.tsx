@@ -5,18 +5,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TagComponent} from '.';
 import { appColors } from '../constants/appColor';
 import { KnifeFork } from '../assets/svgs';
+import { Category } from '../models/Category';
 
 
 interface Props {
   isFill?: boolean;
 }
 
-interface Category {
-  icon: ReactNode;
-  color: string;
-  label: string;
-  key: string;
-}
+
 
 const CategoriesList = (props: Props) => {
   const {isFill} = props;

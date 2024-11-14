@@ -39,6 +39,7 @@ import { HandleNotification } from '../utils/handleNotification';
     const size = 20;
     const color = appColors.gray;
 
+    console.log(auth);
     
     const profileMenu = [
       {
