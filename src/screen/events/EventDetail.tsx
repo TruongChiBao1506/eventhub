@@ -154,7 +154,10 @@ const EventDetail = ({ navigation, route }: any) => {
                                 <TextComponent text={item.locationAddress} color={appColors.gray} />
                             </View>
                         </RowComponent>
-                        <RowComponent styles={{ marginBottom: 20 }}>
+                        <RowComponent styles={{ marginBottom: 20 }} onPress={()=>navigation.navigate('Profile',{
+                            screen: 'ProfileScreen',
+                            params: {id: item.authorId}
+                        })}>
                             <Image source={{ uri: 'https://gamek.mediacdn.vn/133514250583805952/2022/5/18/photo-1-16528608926331302726659.jpg' }}
                                 style={{ width: 48, height: 48, borderRadius: 12, resizeMode: 'cover' }} />
                             <SpaceComponent width={16} />

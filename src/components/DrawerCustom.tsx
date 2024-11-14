@@ -112,6 +112,10 @@ import { HandleNotification } from '../utils/handleNotification';
       case 'MyProfile':
         navigation.navigate('Profile', {
           screen: 'ProfileScreen',
+          params:{
+            id: auth.id,
+            
+          }
         });
         break;
       default:
