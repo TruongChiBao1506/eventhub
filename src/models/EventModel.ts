@@ -32,6 +32,7 @@ export interface EventModel {
   updateAt: string;
   user: any[];
   followers?: string[];
+  joined: string[];
 }
 
 export interface Position {

@@ -24,7 +24,7 @@ interface Props {
 }
 
 const ModalInvite = (props: Props) => {
-    const { visible, onClose } = props;
+    const { visible, onClose} = props;
     const [friendIds, setFriendIds] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [result, setResult] = useState<string[]>([]);
@@ -60,18 +60,18 @@ const ModalInvite = (props: Props) => {
         setUserSelected(items);
     }
 
-    const onShare = async ()=>{
+    const onShare = async () => {
         try {
             const result = await Share.share({
                 message: 'React Native | A framework for building native apps using React',
             });
-            if(result.action === Share.sharedAction){
-                if(result.activityType){
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
 
-                }else{
+                } else {
 
                 }
-            }else if(result.action === Share.dismissedAction){
+            } else if (result.action === Share.dismissedAction) {
 
             }
         } catch (error: any) {
@@ -79,18 +79,41 @@ const ModalInvite = (props: Props) => {
         }
     }
 
+    const handleSendInviteNotification = async () => {
+        console.log(userSelected);
+        
+        if (userSelected.length > 0) {
+            const api = `/send-invite`;
+            try {
+                await userAPI.HandleUser(api, {
+                    ids: userSelected
+                }, 'post');
+
+            } catch (error) {
+                console.log(error);
+
+            }
+        } else {
+            Alert.alert('', 'Please select user want to invite!!');
+        }
+
+    };
+
     return (
         <Portal>
-            <Modalize 
-            handlePosition='inside' 
-            adjustToContentHeight 
-            ref={modalizeRef} 
-            onClose={onClose}
-            FooterComponent={
-                <SectionComponent>
-                    <ButtonComponent text='Invite' onPress={onShare} type='primary'/>
-                </SectionComponent>
-            }
+            <Modalize
+                handlePosition='inside'
+                adjustToContentHeight
+                ref={modalizeRef}
+                onClose={onClose}
+                FooterComponent={
+                    <SectionComponent>
+                        <ButtonComponent text='Invite' onPress={() => {
+                            onShare();
+                            handleSendInviteNotification();
+                        }} type='primary' />
+                    </SectionComponent>
+                }
             >
                 <SectionComponent styles={{ paddingTop: 30 }}>
                     <TextComponent title text='Invite Friend' size={24} font={fontFamilies.medium} />

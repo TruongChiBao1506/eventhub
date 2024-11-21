@@ -1,4 +1,5 @@
 
 import LoadingModal from './LoadingModal';
+import ModalFilterEvents from './ModalFilterEvents';
 
-export {LoadingModal};
+export {LoadingModal, ModalFilterEvents};

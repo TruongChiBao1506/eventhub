@@ -6,7 +6,7 @@ export const appInfo = {
     HEIGHT: Dimensions.get('window').height,
   },
   // BASE_URL: 'https://eventhub-sever.onrender.com',
-  
+  domain: 'https://devtogerther.netlify.app',
   BASE_URL:'http://192.168.2.248:3001',
   // BASE_URL: 'http://localhost:3001',
   monthNames : ["January", "February", "March", "April", "May", "June",
