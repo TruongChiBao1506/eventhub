@@ -209,14 +209,14 @@ const AddNewScreen = () => {
             onSelect={val => {
               console.log(val);
               
-              handleChangeValue('startAt', val.getTime())
+              handleChangeValue('startAt', val)
             }}
             selected={eventData.startAt} />
           <SpaceComponent width={20} />
           <DateTimePicker
             label='End at:'
             type='time'
-            onSelect={val => handleChangeValue('endAt', val.getTime())}
+            onSelect={val => handleChangeValue('endAt', val)}
             selected={eventData.endAt} />
         </RowComponent>
         <DateTimePicker
